@@ -1,0 +1,16 @@
+<div *ngIf="audio || error else loading">
+  <ng-container *ngIf="audio">
+    <h2>{{ audio.title }}</h2>
+    <span>BPM: {{ audio.bpm }}</span>
+    <span>Key: {{ audio.key }} {{ audio.scale }}</span>
+    <span>Happiness: {{audio.happiness}}</span>
+    <span>Sadness: {{audio.sadness}}</span>
+    <span>Danceability: {{audio.danceability}}</span>
+  </ng-container>
+</div>
+<div *ngIf="error">
+  {{error}}
+</div>
+<ng-template #loading>
+  <div>Loading...</div>
+</ng-template>

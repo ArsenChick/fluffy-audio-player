@@ -1,0 +1,14 @@
+{
+  "name": "backend-flask-analyzer",
+  "sourceRoot": "apps/backend/flask-analyzer/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": ["docker build -f ./apps/backend/flask-analyzer/Dockerfile -t flask-analyzer"]
+      }
+    }
+  },
+  "tags": []
+}

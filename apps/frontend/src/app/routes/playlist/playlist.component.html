@@ -1,0 +1,49 @@
+<div>
+  <div class="song-info">
+    <mat-icon>music_note</mat-icon>
+    <fluffy-song-info *ngIf="currentSong.audio"
+      [songId]="currentSong.audio.id" (infoLoaded)="onInfoLoaded($event)"></fluffy-song-info>
+  </div>
+  <mat-list>
+    <h3 mat-subheader>{{ mood | titlecase }} playlist</h3>
+    <mat-divider></mat-divider>
+    <ng-container *ngFor="let song of songs; let i = index">
+      <mat-list-item (click)="openFile(song, i)">
+      <mat-icon color="primary" matListItemIcon
+        [fontIcon]="(currentSong.index === i && !state.error && state.playing)
+          ? 'pause' : 'play_arrow'"></mat-icon>
+      <h4>{{ song.title }}</h4>
+      <span *ngIf="currentSong.index === i && state.error">Some error happened</span>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+    </ng-container>
+  </mat-list>
+  <div *ngIf="errorMsg">{{ errorMsg }}</div>
+</div>
+<div>
+  <mat-toolbar color="primary">
+    <mat-toolbar-row>
+      {{ state.verboseCurrentTime }}
+      <mat-slider min="0" [max]="state.duration" step="1"
+        [disabled]="state.error || currentSong.index === undefined">
+        <input matSliderThumb [value]="state.currentTime"
+          (dragEnd)="onSliderRelease($event)">
+      </mat-slider>
+      {{ state.verboseDuration }}
+    </mat-toolbar-row>
+    <mat-toolbar-row>
+      <button mat-icon-button [disabled]="isFirstPlaying()"
+        (click)="playPrevious()">
+        <mat-icon>skip_previous</mat-icon>
+      </button>
+      <button mat-icon-button [disabled]="state.error"
+        (click)="togglePlayPause()">
+        <mat-icon [fontIcon]="(!state.playing) ? 'play_circle_filled' : 'pause'"></mat-icon>
+      </button>
+      <button mat-icon-button [disabled]="isLastPlaying()"
+        (click)="playNext()">
+        <mat-icon>skip_next</mat-icon>
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+</div>

@@ -1,0 +1,5 @@
+<button mat-raised-button
+  *ngFor="let mood of playlistMood | keyvalue"
+  (click)="onOptionSelected(mood.value)">
+  {{ mood.value | titlecase }}
+</button>

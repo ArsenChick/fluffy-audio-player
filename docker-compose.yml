@@ -1,0 +1,59 @@
+version: '3.9'
+
+services:
+  minio:
+    container_name: minio
+    hostname: minio
+    image: quay.io/minio/minio
+    ports:
+      - 9090:9090
+      - 9000:9000
+    command: server /data --console-address ":9090"
+    environment:
+      MINIO_ROOT_USER: root
+      MINIO_ROOT_PASSWORD: seFdoq1gqWDyNW9e
+    volumes:
+      - minio-volume:/data
+
+  minio-client:
+    image: minio/mc
+    depends_on:
+      - minio
+    entrypoint: >
+      sh -c "
+      mc alias set myminio http://minio:9000 root seFdoq1gqWDyNW9e;
+      mc mb myminio/audio;
+      mc anonymous set download myminio/audio;
+      exit 0;
+      "
+
+  db:
+    image: mariadb
+    restart: always
+    volumes:
+      - fluffy_db:/var/lib/mysql
+    ports:
+      - 3306:3306
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: fluffy
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+  analyzer:
+    build: ./apps/backend/flask-analyzer
+    ports:
+      - 8000:5000
+    volumes:
+      - type: bind
+        source: ./apps/backend/flask-analyzer/src
+        target: /app/src
+
+volumes:
+  minio-volume:
+  fluffy_db:
+  my_app:
