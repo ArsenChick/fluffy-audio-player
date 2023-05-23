@@ -1,17 +1,19 @@
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Component, OnInit
+  Component, OnDestroy, OnInit
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSliderDragEvent } from '@angular/material/slider';
 import { Subject, catchError, of, takeUntil } from 'rxjs';
 
-import { StreamState } from './interfaces/stream-state.interface';
 import { AudioService } from './services/audio.service';
 import { HttpAudioService } from './services/http-audio.service';
+import { BeatEventRelayService } from './services/beat-event-relay.service';
+
 import { createDefaultStreamState } from './utils';
 import { AudioStub } from './interfaces/audio-stub.interface';
+import { StreamState } from './interfaces/stream-state.interface';
 
 @Component({
   selector: 'fluffy-playlist',
@@ -19,7 +21,7 @@ import { AudioStub } from './interfaces/audio-stub.interface';
   styleUrls: ['./playlist.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PlaylistComponent implements OnInit {
+export class PlaylistComponent implements OnInit, OnDestroy {
 
   private notifier$ = new Subject();
 
@@ -30,12 +32,14 @@ export class PlaylistComponent implements OnInit {
   currentSong: { index?: number, audio?: AudioStub } = {};
 
   errorMsg?: string;
+  songStarted = false;
 
   constructor(
     private readonly route: ActivatedRoute,
     private readonly router: Router,
     private readonly changeDetectionRef: ChangeDetectorRef,
     private readonly audioService: AudioService,
+    private readonly beatEventRelayService: BeatEventRelayService,
     private readonly httpAudioService: HttpAudioService,
   ) {}
 
@@ -66,26 +70,36 @@ export class PlaylistComponent implements OnInit {
       });
   }
 
+  ngOnDestroy() {
+    this.audioService.stop();
+  }
+
   openFile(audio: AudioStub, index: number) {
     if (this.currentSong.index === index)
       this.togglePlayPause()
     else {
       this.currentSong = { index, audio };
       this.audioService.stop();
+      this.audioService.resetState();
+      this.songStarted = false;
     }
   }
 
   onInfoLoaded(value: string) {
-    if (this.currentSong.audio)
+    if (this.currentSong.audio) {
       this.playStream(this.currentSong.audio.url);
+    }
   }
 
   togglePlayPause() {
     if (this.state.canplay) {
-      if (this.state.playing)
+      if (this.state.playing) {
         this.audioService.pause();
-      else
+        this.beatEventRelayService.messagePause();
+      } else {
         this.audioService.play();
+        this.beatEventRelayService.messageStart();
+      }
     }
   }
 
@@ -115,15 +129,26 @@ export class PlaylistComponent implements OnInit {
 
   onSliderRelease(change: MatSliderDragEvent) {
     this.audioService.seekTo(change.value);
+    this.beatEventRelayService.messagePause();
+    if (this.state.playing)
+      this.beatEventRelayService.messageStart();
   }
 
   private playStream(url: string) {
     this.audioService.playStream(url).subscribe(event => {
-      if (event.type == 'ended') {
-        if (this.isLastPlaying())
-          this.audioService.stop();
-        else
-          this.playNext();
+      switch (event.type) {
+        case 'canplay':
+          if (!this.songStarted) {
+            this.beatEventRelayService.messageStart();
+            this.songStarted = true;
+          }
+          break;
+        case 'ended':
+          if (this.isLastPlaying())
+            this.audioService.stop();
+          else
+            this.playNext();
+          break;
       }
     })
   }

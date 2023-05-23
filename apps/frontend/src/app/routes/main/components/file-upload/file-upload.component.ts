@@ -22,7 +22,6 @@ export class FileUploadComponent implements OnDestroy {
   ) {}
 
   ngOnDestroy(): void {
-    console.log('DESTROYED! SOL BADGUY WINS!');
     this.notifier.next(0);
     this.notifier.complete();
   }

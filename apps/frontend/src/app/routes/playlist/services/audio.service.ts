@@ -42,12 +42,17 @@ export class AudioService {
     this.audioHTMLObject.currentTime = ms;
   }
 
+  resetState() {
+    this._resetState();
+    this.stateChange$.next(this.state);
+  }
+
   private formatTime(time: number, format: string = 'm:ss') {
     const dur = Duration.fromMillis(time * 1000);
     return dur.toFormat(format);
   }
 
-  private resetState() {
+  private _resetState() {
     this.state = createDefaultStreamState();
   }
 
@@ -67,7 +72,7 @@ export class AudioService {
         this.audioHTMLObject.pause();
         this.audioHTMLObject.currentTime = 0;
         this.removeEvents(this.audioHTMLObject, handler);
-        this.resetState();
+        this._resetState();
       }
     })
   }
@@ -110,7 +115,7 @@ export class AudioService {
           this.formatTime(this.state.currentTime);
         break;
       case 'error':
-        this.resetState();
+        this._resetState();
         this.state.error = true;
         break;
     }
