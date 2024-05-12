@@ -1,19 +1,26 @@
-<ng-container [ngSwitch]="status">
-  <div *ngSwitchCase="statusEnum.Idle">
-    <input type="file" class="file-input"
-      (change)="onFileSelected($event)" #fileUpload>
-    <button mat-flat-button color="primary" class="upload-btn"
-      (click)="fileUpload.click()">
-      <mat-icon>attach_file</mat-icon>
-    </button>
-  </div>
-  <div *ngSwitchCase="statusEnum.InProgress">
-    <mat-spinner></mat-spinner>
-  </div>
-  <div *ngSwitchCase="statusEnum.Done">
-    a miracle indeed!
-  </div>
-  <div *ngSwitchDefault>
-    a miracle
-  </div>
-</ng-container>
+<h1 mat-dialog-title>Uploading a file</h1>
+<div mat-dialog-content class="dialog-container">
+  <ng-container [ngSwitch]="status">
+    <div *ngSwitchCase="statusEnum.Idle">
+      <input type="file" class="file-input"
+        (change)="onFileSelected($event)" #fileUpload>
+      <button mat-flat-button color="primary" class="upload-btn"
+        (click)="fileUpload.click()">
+        <mat-icon>attach_file</mat-icon>
+        Select a file from computer
+      </button>
+    </div>
+    <div *ngSwitchCase="statusEnum.InProgress">
+      <mat-spinner></mat-spinner>
+    </div>
+    <div *ngSwitchCase="statusEnum.Done">
+      a miracle indeed!
+    </div>
+    <div *ngSwitchDefault>
+      a miracle
+    </div>
+  </ng-container>
+</div>
+<mat-dialog-actions>
+  <button mat-button (click)="onCancel()">Close</button>
+</mat-dialog-actions>

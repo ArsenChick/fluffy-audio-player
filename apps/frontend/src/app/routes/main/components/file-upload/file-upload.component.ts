@@ -3,6 +3,7 @@ import { Subject, takeUntil } from 'rxjs';
 
 import { ApiService } from '../../../../services/api.service';
 import { UploadStatus } from '../../interfaces/upload-status.enum';
+import { DialogRef } from '@angular/cdk/dialog';
 
 @Component({
   selector: 'fluffy-file-upload',
@@ -17,6 +18,7 @@ export class FileUploadComponent implements OnDestroy {
   private readonly notifier = new Subject();
 
   constructor(
+    public dialogRef: DialogRef<FileUploadComponent>,
     private apiService: ApiService,
     private changeDetectionRef: ChangeDetectorRef
   ) {}
@@ -39,5 +41,9 @@ export class FileUploadComponent implements OnDestroy {
           this.changeDetectionRef.detectChanges();
         });
     }
+  }
+
+  onCancel() {
+    this.dialogRef.close();
   }
 }

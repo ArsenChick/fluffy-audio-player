@@ -1,0 +1,49 @@
+.root-container{
+  margin: 0 1.5em;
+  height: 100%;
+  width: calc(100% - 3em);
+
+  .info-root-container {
+    height: 100%;
+
+    .info-container {
+      display: flex;
+      height: 100%;
+      flex-direction: column;
+
+      .chips-container {
+        flex-grow: 1;
+      }
+
+      .ticks-root-container {
+        height: 10em;
+
+        .ticks-container {
+          display: flex;
+          position: relative;
+          align-items: center;
+          height: 100%;
+
+          .beat-reciever {
+            position: relative;
+            left: 100%;
+            transform: translateX(-50%);
+            z-index: 999;
+
+            width: 6em;
+            height: 6em;
+            overflow: hidden;
+          }
+        }
+      }
+    }
+  }
+
+  .placeholder {
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    color: lightgrey;
+  }
+}

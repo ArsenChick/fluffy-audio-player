@@ -1,4 +1,12 @@
 .beat-tick {
-  display: inline-block;
+  display: block;
   position: absolute;
+  transform: translateY(-50%);
+  z-index: 9;
+
+  background-color: #673AB7;
+  border-radius: 5px;
+
+  height: 2.5em;
+  width: 0.5em;
 }

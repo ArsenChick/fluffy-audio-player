@@ -21,13 +21,13 @@ import { ANIMATION_DURATION_MS } from '../../constants/audio-events.const';
   animations: [
     trigger('beatTrigger', [
       state('finish', style({
-        left: 'calc(100% - 100px)'
+        left: 'calc(100% - 2em)'
       })),
       transition('* => finish', [
         style({
-          left: 0,
+          left: '-2.5em',
         }),
-        animate(`${ANIMATION_DURATION_MS}ms ease-in`)
+        animate(`${ANIMATION_DURATION_MS}ms`)
       ])
     ])
   ]
@@ -37,9 +37,5 @@ export class BeatTickComponent implements OnInit {
 
   ngOnInit() {
     this.trigger = true;
-  }
-
-  onAnimationDone() {
-    //console.log('done');
   }
 }

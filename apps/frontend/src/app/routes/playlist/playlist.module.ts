@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { MatListModule } from '@angular/material/list';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatChipsModule } from '@angular/material/chips';
 
 import { SharedModule } from '../../shared/shared.module';
 
@@ -30,7 +31,8 @@ import { BeatScaleHostDirective } from './directives/beat-scale-host.directive';
     SharedModule,
     MatListModule,
     MatSliderModule,
-    MatDividerModule
+    MatDividerModule,
+    MatChipsModule
   ],
   providers: [
     AudioService,

@@ -1,18 +1,32 @@
-<div *ngIf="audio || error else loading">
-  <ng-container *ngIf="audio">
-    <h2>{{ audio.title }}</h2>
-    <span>BPM: {{ audio.bpm }}</span>
-    <span>Key: {{ audio.key }} {{ audio.scale }}</span>
-    <span>Happiness: {{audio.happiness}}</span>
-    <span>Sadness: {{audio.sadness}}</span>
-    <span>Danceability: {{audio.danceability}}</span>
-    <br>
-    <ng-container fluffyBeatScaleHost></ng-container>
-  </ng-container>
+<div class="root-container">
+  <div *ngIf="audio || error else loading" class="info-root-container">
+    <ng-container *ngIf="audio">
+      <div class="info-container">
+        <h2>{{ audio.title }}</h2>
+        <div class="chips-container">
+          <mat-chip-set>
+            <mat-chip>BPM: {{ audio.bpm }}</mat-chip>
+            <mat-chip>Key: {{ audio.key }} {{ audio.scale }}</mat-chip>
+          </mat-chip-set>
+          <mat-chip-set>
+            <mat-chip>Happiness: {{audio.happiness * 10 | number: '1.0-1' }}</mat-chip>
+            <mat-chip>Sadness: {{audio.sadness * 10 | number: '1.0-1' }}</mat-chip>
+            <mat-chip>Danceability: {{audio.danceability * 10 | number: '1.0-1' }}</mat-chip>
+          </mat-chip-set>
+        </div>
+        <div class="ticks-root-container">
+          <div class="ticks-container">
+            <ng-container fluffyBeatScaleHost></ng-container>
+            <img class="beat-reciever" src="/assets/img/cd.png">
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+  <div *ngIf="error">
+    {{error}}
+  </div>
+  <ng-template #loading>
+    <div class="placeholder">Loading...</div>
+  </ng-template>
 </div>
-<div *ngIf="error">
-  {{error}}
-</div>
-<ng-template #loading>
-  <div>Loading...</div>
-</ng-template>
