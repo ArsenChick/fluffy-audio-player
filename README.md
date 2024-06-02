@@ -15,3 +15,7 @@
 ### Start up Angular app (in separate terminal)
 
 ``npx nx serve frontend``
+
+### Getting the playlists
+
+You should upload at least 10 compositions and choose "No style" playlist, if you want to see the results immediately
